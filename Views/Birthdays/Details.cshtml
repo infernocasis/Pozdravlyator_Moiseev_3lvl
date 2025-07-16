@@ -1,0 +1,24 @@
+@model Pozdravlyator.Models.Birthday
+@{
+    ViewData["Title"] = "Детали дня рождения";
+}
+<h1>Детали дня рождения</h1>
+<div>
+    <dl class="row">
+        <dt class = "col-sm-2">Имя</dt>
+        <dd class = "col-sm-10">@Model.Name</dd>
+        <dt class = "col-sm-2">Дата</dt>
+        <dd class = "col-sm-10">@Model.Date.ToString("dd.MM.yyyy")</dd>
+        <dt class = "col-sm-2">Комментарий</dt>
+        <dd class = "col-sm-10">@Model.Comment</dd>
+        <dt class = "col-sm-2">Фото</dt>
+        <dd class = "col-sm-10">
+            @if (!string.IsNullOrEmpty(Model.PhotoPath))
+            {
+                <img src="@Model.PhotoPath" alt="Фото" width="120" height="120" style="object-fit:cover; border-radius:50%;" />
+            }
+        </dd>
+    </dl>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Редактировать</a>
+    <a asp-action="Index" class="btn btn-secondary">Назад</a>
+</div> 

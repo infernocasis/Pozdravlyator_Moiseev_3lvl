@@ -1,0 +1,40 @@
+@model IEnumerable<Pozdravlyator.Models.Birthday>
+@{
+    ViewData["Title"] = "Список дней рождения";
+}
+<h1>Список дней рождения</h1>
+<p>
+    <a class="btn btn-primary" asp-action="Create">Добавить</a>
+</p>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Фото</th>
+            <th>Имя</th>
+            <th>Дата</th>
+            <th>Комментарий</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @if (!string.IsNullOrEmpty(item.PhotoPath))
+                {
+                    <img src="@item.PhotoPath" alt="Фото" width="60" height="60" style="object-fit:cover; border-radius:50%;" />
+                }
+            </td>
+            <td>@item.Name</td>
+            <td>@item.Date.ToString("dd.MM.yyyy")</td>
+            <td>@item.Comment</td>
+            <td>
+                <a class="btn btn-info btn-sm" asp-action="Details" asp-route-id="@item.Id">Подробнее</a>
+                <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@item.Id">Редактировать</a>
+                <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table> 

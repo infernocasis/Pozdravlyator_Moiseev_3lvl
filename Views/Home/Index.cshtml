@@ -1,0 +1,55 @@
+﻿@using Pozdravlyator.Models
+@inject Pozdravlyator.Data.ApplicationDbContext db
+@{
+    ViewData["Title"] = "Ближайшие дни рождения";
+    var today = DateTime.Today;
+    var upcoming = db.Birthdays
+        .ToList()
+        .Where(b =>
+            (b.Date.Month == today.Month && b.Date.Day >= today.Day) ||
+            (b.Date.Month == today.AddMonths(1).Month && b.Date.Day <= today.AddDays(7).Day))
+        .OrderBy(b => b.Date.Month).ThenBy(b => b.Date.Day)
+        .Take(10)
+        .ToList();
+    var todayList = db.Birthdays.Where(b => b.Date.Month == today.Month && b.Date.Day == today.Day).ToList();
+}
+<h1>Поздравлятор</h1>
+<p>
+    <a class="btn btn-primary" asp-controller="Birthdays" asp-action="Index">Все дни рождения</a>
+</p>
+@if (todayList.Any())
+{
+    <h3>Сегодня празднуют:</h3>
+    <ul>
+        @foreach (var b in todayList)
+        {
+            <li>
+                @if (!string.IsNullOrEmpty(b.PhotoPath))
+                {
+                    <img src="@b.PhotoPath" width="40" height="40" style="object-fit:cover; border-radius:50%;" />
+                }
+                <b>@b.Name</b> — @b.Date.ToString("dd.MM.yyyy") @if (!string.IsNullOrEmpty(b.Comment)) { <span> (@b.Comment)</span> }
+            </li>
+        }
+    </ul>
+}
+<h3>Ближайшие дни рождения:</h3>
+@if (upcoming.Any())
+{
+    <ul>
+        @foreach (var b in upcoming)
+        {
+            <li>
+                @if (!string.IsNullOrEmpty(b.PhotoPath))
+                {
+                    <img src="@b.PhotoPath" width="40" height="40" style="object-fit:cover; border-radius:50%;" />
+                }
+                <b>@b.Name</b> — @b.Date.ToString("dd.MM.yyyy") @if (!string.IsNullOrEmpty(b.Comment)) { <span> (@b.Comment)</span> }
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>Нет ближайших дней рождения.</p>
+}
